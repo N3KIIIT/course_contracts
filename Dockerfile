@@ -1,31 +1,14 @@
-FROM golang:1.27
+FROM golang:latest
+ARG PROTOC_VERSION=36.1
 
-RUN apk add --no-cache git curl
+RUN apt-get update && apt-get install -y unzip curl git && rm -rf /var/lib/apt/lists/* && \ 
+    curl -sSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc.zip && \ 
+    unzip protoc.zip -d /usr/local && rm protoc.zip
 
-RUN go install ://github.com && \
-    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.33.0 && \
-    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+RUN git clone --depth=1 https://github.com/googleapis/googleapis
 
-WORKDIR /src
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \ 
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
-COPY go.mod go.sum ./
-RUN go mod download
-
-COPY proto/ ./proto/
-COPY buf.gen.yaml ./
-COPY . .
-
-RUN buf generate
-
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server ./cmd/server/main.go
-
-
-FROM alpine:3.21 AS runner
-
-WORKDIR /app
-
-COPY --from=builder /app/server .
-
-EXPOSE 50051
-
-CMD ["./server"]
+    ENV PATH="$PATH:/go/bin"
+WORKDIR /app 
