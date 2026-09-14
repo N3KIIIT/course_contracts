@@ -41,34 +41,33 @@ service Account {
             delete: "account/api/v1/users/{id}"
         };
     }
+}
+ message CreateUserRequest {
+    CreateUser user = 1;
+}
 
-    message CreateUserRequest {
-        CreateUser user = 1;
-    }
+message GetUserRequest {
+    string  id = 1;
+}
 
-    message GetUserRequest {
-        uuid id = 1;
-    }
+message GetUserResponse {
+    User user = 1;
+}
 
-    message GetUserResponse {
-        User user = 1;
-    }
+message GetUsersRequest {
+    pagination.Pagination pagination = 1;
+}
 
-    message GetUsersRequest {
-        pagination.Pagination pagination = 1;
-    }
+message GetUsersResponse {
+    repeated User users = 1;
+    pagination.Pagination pagination = 2;
+}
 
-    message GetUsersResponse {
-        repeated User users = 1;
-        pagination.Pagination pagination = 2;
-    }
+message UpdateUserRequest {
+    string  id = 1;
+    User    user = 2;
+}
 
-    message UpdateUserRequest {
-        uuid id = 1;
-        User user = 2;
-    }
-
-    message DeleteUserRequest {
-        uuid id = 1;
-    }
+message DeleteUserRequest {
+    string  id = 1;
 }

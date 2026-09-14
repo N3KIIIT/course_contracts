@@ -3,6 +3,8 @@ syntax = "proto3";
 package account;
 option go_package = "github.com/N3KIIIT/contracts/account/go;account";
 
+import "google/protobuf/timestamp.proto";
+
 message CreateUser {
     string login = 1;
     string phone = 2;
@@ -10,18 +12,18 @@ message CreateUser {
     string first_name = 4;
     string last_name = 5;
     string middle_name = 6;
-    uint16 age = 7;
+    uint32 age = 7;
 }
 
 message User {
-    uuid id = 1;
+    string id = 1;
     string login = 2;
     string phone = 3;
     string email = 4;
     string first_name = 5;
     string last_name = 6;
     string middle_name = 7;
-    uint16 age = 8;
+    uint32 age = 8;
     google.protobuf.Timestamp created_at = 9;
     google.protobuf.Timestamp updated_at = 10;
 }
